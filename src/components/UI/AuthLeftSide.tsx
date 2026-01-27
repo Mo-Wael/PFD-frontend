@@ -1,4 +1,4 @@
-import { Wallet } from "lucide-react"
+import Logo from "./Logo"
 
 interface IProps {
     auth: string
@@ -7,10 +7,7 @@ interface IProps {
 const AuthLeftSide = ({auth} : IProps) => {
     return (
       <div className="w-1/2 p-8 space-x-2 bg-background-main text-white flex flex-col justify-between items-start">
-        <div className="flex align-middle mt-3 gap-2">
-          <Wallet className="bg-green-400 rounded-lg p-2" size={40} />
-          <h1 className="text-4xl font-bold">FinanceHub</h1>
-        </div>
+        <Logo />
 
         <div className="flex flex-col w-2/3 space-y-2">
           {auth === "login" ? (

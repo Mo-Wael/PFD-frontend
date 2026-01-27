@@ -1,5 +1,5 @@
 import type z from "zod";
-import { registerSchema } from "../utils/schema";
+import { registerSchema } from "../../utils/schema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Lock, Mail, User } from "lucide-react";
@@ -17,8 +17,8 @@ const RegisterForm = () => {
   });
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-md p-8 bg-white rounded-xl shadow-md text-black">
+    <div className="w-1/2 mx-auto p-4 rounded-xl text-black flex flex-col items-center justify-center">
+      <div className="w-full max-w-md p-8">
         {/* Header */}
         <div className="mb-6 text-center space-y-1">
           <h2 className="text-2xl font-bold">Create an account</h2>
@@ -26,7 +26,7 @@ const RegisterForm = () => {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit(console.log)} className="space-y-4">
+        <form onSubmit={handleSubmit(data => console.log("The data", data))} className="space-y-4">
           {/* Full Name */}
           <div className="relative">
             <User className="absolute left-3 top-3 text-gray-400" />
@@ -91,7 +91,7 @@ const RegisterForm = () => {
         {/* Footer */}
         <div className="mt-6 text-center text-sm text-gray-600">
           Already have an account?{" "}
-          <a href="#" className="text-black font-medium hover:underline">
+          <a href="/login" className="text-black font-medium hover:underline">
             Sign in
           </a>
         </div>

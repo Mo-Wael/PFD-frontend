@@ -1,14 +1,14 @@
 import AuthLeftSide from "../components/UI/AuthLeftSide"
 import AuthRightSide from "../components/UI/AuthRightSide"
 
-const LoginPage = () => {
+const RegisterPage = () => {
     return (
         <div className="flex min-h-screen">
             {/* left side - available for desktop only */}
-            <AuthLeftSide auth="login" />
-            <AuthRightSide auth="login" />
+            <AuthLeftSide auth="register" />
+            <AuthRightSide auth="register" />
         </div>
    )
 }
 
-export default LoginPage
+export default RegisterPage
