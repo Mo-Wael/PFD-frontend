@@ -15,7 +15,7 @@ const Navbar = () => {
   const currentPageName = pageNames[location.pathname] || "Dashboard";
 
   return (
-    <header className="h-20 bg-white shadow-2xs border-b flex justify-between items-center px-6">
+    <header className="h-18.5 bg-white shadow-2xs border-b flex justify-between items-center px-6">
       <h1 className="font-semibold text-3xl">{currentPageName}</h1>
 
       <div className="flex">
