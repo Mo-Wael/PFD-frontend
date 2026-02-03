@@ -7,9 +7,9 @@ interface IProps {
   icon?: React.ReactNode;
 }
 
-const StatCard = ({ 
-  title = "Total Balance", 
-  amount = "$12,458.75", 
+const StatCard = ({
+  title = "Total Balance",
+  amount = "$12,458.75",
   change = "+12.5% from last month",
   icon = <Wallet size={24} />
 }: IProps) => {

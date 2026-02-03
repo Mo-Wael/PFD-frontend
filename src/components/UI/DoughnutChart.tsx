@@ -5,7 +5,7 @@ import { transactions } from "../../data/Transaction";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const DoughnutChart = () => {
-    // Aggregate totals by category
+  // Aggregate totals by category
   const categoryTotals: Record<string, number> = {};
   transactions.forEach((tx) => {
     if (tx.type === "expense") {
@@ -47,7 +47,7 @@ const DoughnutChart = () => {
 
   return (
     //  w-fit
-    <div className="flex flex-col w-fit h-auto space-x-5 items-start sm:items-center justify-between bg-white p-6 rounded-xl hover:shadow-lg transition-shadow gap-4">
+    <div className="flex flex-2 flex-col w-fit h-auto space-x-5 items-start sm:items-center justify-between bg-white p-6 rounded-xl hover:shadow-lg transition-shadow gap-4">
       <h1 className="text-xl font-bold">Spending by Category</h1>
       <Doughnut data={data} options={options} />
     </div>

@@ -1,4 +1,5 @@
 import DoughnutChart from "../components/UI/DoughnutChart";
+import MiniTransaction from "../components/UI/MiniTransaction";
 import StatCard from "../components/UI/StatCard";
 
 const Dashboard = () => {
@@ -22,10 +23,9 @@ const Dashboard = () => {
         />
       </div>
 
-      <div className="flex ">
+      <div className="flex flex-wrap gap-5">
         <DoughnutChart />
-
-        
+        <MiniTransaction />
 
       </div>
     </div>

@@ -8,7 +8,7 @@ const RegisterPage = () => {
             <AuthLeftSide auth="register" />
             <AuthRightSide auth="register" />
         </div>
-   )
+    )
 }
 
 export default RegisterPage
