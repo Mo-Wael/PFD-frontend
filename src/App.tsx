@@ -5,14 +5,15 @@ import RegisterPage from './pages/RegisterPage'
 import { routes } from './routes/routes'
 import Layout from './components/layout/Layout'
 import ProtectedRoute from './utils/ProtectedRoute'
+import { useAuthStore } from './store/authStore'
 
 function App() {
-  const isAuthenticated = !!localStorage.getItem("authToken") || true;
+  // const isAuthenticated = !!localStorage.getItem("authToken") || true;
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated());
+  console.log("isAuthenticated", isAuthenticated);
 
   return (
     <>
-      {/* <LoginPage /> */}
-      {/* <RegisterPage /> */}
       <Routes>
         <Route path='/login' element={<LoginPage />} />
         <Route path='/register' element={<RegisterPage />} />
@@ -22,12 +23,12 @@ function App() {
             <Layout />
           </ProtectedRoute>
         }>
-          {routes.map((route,idx) => (
+          {routes.map((route, idx) => (
             <Route
-            key={idx}
-            path={route.path}
-            element={<route.component />}
-            index={route.Index}
+              key={idx}
+              path={route.path}
+              element={<route.component />}
+              index={route.Index}
             />
           ))}
         </Route>

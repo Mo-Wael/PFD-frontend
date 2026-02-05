@@ -48,7 +48,9 @@ const CalendarPage = () => {
           <Calendar
             onChange={(date) => setSelectedDate(date as Date)}
             value={selectedDate}
-            className="w-full"
+            className="w-full custom-calendar"
+            calendarType="islamic"
+            locale="en-US"
           />
         </div>
 

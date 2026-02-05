@@ -3,10 +3,17 @@ import { loginSchema } from "../../utils/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type z from "zod";
 import { Lock, Mail } from "lucide-react";
+import { useLogin } from "../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 type LoginData = z.infer<typeof loginSchema>;
 
 const LoginForm = () => {
+  const navigate = useNavigate();
+  const {
+    mutateAsync: login
+  } = useLogin();
+
   const {
     register,
     handleSubmit,
@@ -15,6 +22,17 @@ const LoginForm = () => {
     resolver: zodResolver(loginSchema),
     mode: "onBlur",
   });
+
+  async function handleLogin(data: { email: string; password: string; }) {
+    try {
+      await login(data);
+      // Navigate to home page after successful login
+      navigate("/");
+    } catch (error) {
+      console.error("Login failed:", error);
+      // You might want to show an error message to the user here
+    }
+  }
 
   return (
     <div className="w-1/2 mx-auto p-4 rounded-xl text-black flex flex-col items-center justify-center">
@@ -26,7 +44,7 @@ const LoginForm = () => {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit(data => console.log("The data", data))} className="space-y-4">
+        <form onSubmit={handleSubmit(handleLogin)} className="space-y-4">
           {/* Email Field */}
           <label htmlFor="email">Email</label>
           <div className="relative">

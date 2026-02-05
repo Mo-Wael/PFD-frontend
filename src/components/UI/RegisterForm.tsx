@@ -3,10 +3,14 @@ import { registerSchema } from "../../utils/schema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Lock, Mail, User } from "lucide-react";
+import { useRegister } from "../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 type RegisterData = z.infer<typeof registerSchema>;
 
 const RegisterForm = () => {
+  const navigate = useNavigate();
+  const { mutateAsync: registerUser } = useRegister();
   const {
     register,
     handleSubmit,
@@ -15,6 +19,15 @@ const RegisterForm = () => {
     resolver: zodResolver(registerSchema),
     mode: "onBlur",
   });
+
+  async function handleRegister(data: { fullName: string, email: string, password: string }) {
+    try {
+      await registerUser(data);
+      navigate("/");
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
+  }
 
   return (
     <div className="w-1/2 mx-auto p-4 rounded-xl text-black flex flex-col items-center justify-center">
@@ -82,6 +95,7 @@ const RegisterForm = () => {
           <button
             disabled={isSubmitting}
             type="submit"
+            onClick={() => handleRegister}
             className="w-full py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition"
           >
             Create account
