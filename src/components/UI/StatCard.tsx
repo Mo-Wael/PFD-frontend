@@ -14,7 +14,7 @@ const StatCard = ({
   icon = <Wallet size={24} />
 }: IProps) => {
   return (
-    <div className="flex flex-col sm:flex-row space-x-5 items-start sm:items-center justify-between bg-white p-6 rounded-xl hover:shadow-lg transition-shadow gap-4 w-fit">
+    <div className="flex flex-1 gap-2 items-start sm:items-center  justify-between bg-white p-6 rounded-xl hover:shadow-lg transition-shadow w-fit">
       {/* Left Side */}
       <div className="space-y-2 flex-1">
         <h2 className="text-gray-500 text-sm sm:text-lg">{title}</h2>

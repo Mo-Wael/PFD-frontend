@@ -5,7 +5,7 @@ import StatCard from "../components/UI/StatCard";
 const Dashboard = () => {
   return (
     <div className="flex flex-col space-y-4">
-      <div className="flex flex-wrap space-x-3 gap-4">
+      <div className="flex flex-col flex-wrap w-full md:flex-row md:w-full gap-4">
         <StatCard
           title="Total Balance"
           amount="$12,458.75"
@@ -23,7 +23,7 @@ const Dashboard = () => {
         />
       </div>
 
-      <div className="flex flex-wrap gap-5">
+      <div className="flex flex-col md:flex-row w-fit md:w-full gap-5">
         <DoughnutChart />
         <MiniTransaction />
 

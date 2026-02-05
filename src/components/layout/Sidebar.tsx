@@ -50,8 +50,8 @@ const Sidebar = ({ isMobileOpen, onMobileClose }: SidebarProps) => {
         {/* Header */}
         <div
           className={`flex ${collapsed
-              ? "flex-col items-center gap-2"
-              : "flex-row items-center justify-between"
+            ? "flex-col items-center gap-2"
+            : "flex-row items-center justify-between"
             } p-4 border-b border-zinc-700`}
         >
           <div className="flex items-center gap-3">

@@ -11,7 +11,7 @@ const Transactions = () => {
   return (
     <div className='flex h-screen flex-col gap-4 p-4'>
       {/* adding and searching and filtering header */}
-      <div className="flex align-center justify-between items-baseline gap-3 space-y-2">
+      <div className="flex flex-col sm:flex-row align-center justify-between items-baseline gap-3 space-y-2">
         <div className="relative w-full max-w-md">
           <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
           <input type="text" placeholder="Search transactions..." className="w-full pl-10 pr-4 py-2 bg-[#f7f8f9] border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black" />
@@ -37,7 +37,7 @@ const Transactions = () => {
       </div>
 
       {/* Transactions Table */}
-      <div className="overflow-x-auto">
+      <div className="overflow-auto">
         <table className="min-w-full px-3 py-6 border-collapse bg-white shadow-md rounded-lg">
           <thead>
             <tr className="bg-slate-100 text-slate-500 text-left">
