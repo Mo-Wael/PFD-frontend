@@ -7,10 +7,11 @@ export const useCurrentUser = () => {
 
     return useQuery({
         queryKey: ["currentUser"],
-        queryFn: () => getCurrentUser(token!),
+        queryFn: () => getCurrentUser(),
         enabled: !!token,
     });
 };
+
 
 export const useLogin = () => {
     const setToken = useAuthStore((s) => s.setToken);

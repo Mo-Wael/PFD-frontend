@@ -1,13 +1,49 @@
-import { PlusIcon, Search } from 'lucide-react'
+import { EditIcon, PlusIcon, Search, TrashIcon } from 'lucide-react'
 import Logo from '../components/UI/Logo';
+import { useTransactions } from '../hooks/useTransaction';
+// import { useCurrentUser } from '../hooks/useAuth';
+import type { Transaction } from '../types/Transaction';
+import { useState } from 'react';
+import AddTransactionModel from '../components/UI/AddTransactionModel';
+import { formatDate } from '../utils/Data';
+import EditTransactionModel from '../components/UI/EditTransactionModel';
+import DeleteTransactionModel from '../components/UI/DeleteTransactionModel';
 
-const transactions = [
-  { date: "2026-02-01", category: "Food", description: "Grocery shopping", type: "expense", amount: "$25.00" },
-  { date: "2026-02-02", category: "Salary", description: "Monthly paycheck", type: "income", amount: "$1,200.00" },
-  { date: "2026-02-03", category: "Transport", description: "Public transit", type: "expense", amount: "$15.00" },
-];
+// const transactions = [
+//   { date: "2026-02-01", category: "Food", description: "Grocery shopping", type: "expense", amount: "$25.00" },
+//   { date: "2026-02-02", category: "Salary", description: "Monthly paycheck", type: "income", amount: "$1,200.00" },
+//   { date: "2026-02-03", category: "Transport", description: "Public transit", type: "expense", amount: "$15.00" },
+// ];
 
 const Transactions = () => {
+  const [modelOpend, setModelOpend] = useState(false);
+  const [editModelOpened, setEditModelOpened] = useState(false);
+  const [deleteModelOpened, setDeleteModelOpened] = useState(false);
+  const [selectedTransaction, setSelectedTransaction] = useState<Transaction>();
+  const { data: transactionsResponse, isLoading, isError } = useTransactions();
+  const transactions = transactionsResponse?.data.transactions || [];
+  // console.log("transactions", transactions);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    return <div>Error loading transactions</div>;
+  }
+
+  if (modelOpend) {
+    return <AddTransactionModel modelOpend={modelOpend} setModelOpend={setModelOpend} />
+  }
+
+  if (editModelOpened) {
+    return <EditTransactionModel modelOpened={editModelOpened} setEditModelOpened={setEditModelOpened} transaction={selectedTransaction} />
+  }
+
+  if (deleteModelOpened) {
+    return <DeleteTransactionModel modelOpened={deleteModelOpened} setDeleteModelOpened={setDeleteModelOpened} transaction={selectedTransaction} />
+  }
+
   return (
     <div className='flex h-screen flex-col gap-4 p-4'>
       {/* adding and searching and filtering header */}
@@ -31,7 +67,7 @@ const Transactions = () => {
           <option value="income">Income</option>
           <option value="expense">Expense</option>
         </select>
-        <button className='flex items-center cursor-pointer gap-2 p-2 border border-gray-300 bg-background-main text-white rounded-xl hover:bg-background-main/80'>
+        <button onClick={() => setModelOpend(!modelOpend)} className='flex items-center cursor-pointer gap-2 p-2 border border-gray-300 bg-background-main text-white rounded-xl hover:bg-background-main/80'>
           <PlusIcon className="w-5 h-5" /> Add Transaction
         </button>
       </div>
@@ -45,17 +81,22 @@ const Transactions = () => {
               <th className="px-4 py-4">Category</th>
               <th className="px-4 py-4">Date</th>
               <th className="px-4 py-4">Amount</th>
+              <th className="px-4 py-4">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {transactions.map((t, idx) => (
-              <tr key={idx} className="hover:bg-slate-50 transition-colors font-semibold" >
+            {transactions.map((t: Transaction) => (
+              <tr key={t._id} className="hover:bg-slate-50 transition-colors font-semibold" >
                 <td className={`px-4 py-4 flex gap-4 items-center`}>{<Logo type={t.type} />}{t.description}</td>
                 <td className="px-4 py-4">{t.category}</td>
-                <td className="px-4 py-4">{t.date}</td>
+                <td className="px-4 py-4">{formatDate(t.transactionDate)}</td>
                 <td className={`px-4 py-4 font-semibold ${t.type === "income" ? "text-emerald-600" : "text-rose-600"}`} >
                   {t.type === "income" ? "+" : "-"}
                   {t.amount}
+                </td>
+                <td className="px-4 py-4 items-center">
+                  <button className="cursor-pointer focus:outline-none text-blue-600 hover:text-blue-800 mr-2" onClick={() => { setEditModelOpened(true); setSelectedTransaction(t); }}>{<EditIcon />}</button>
+                  <button className="cursor-pointer focus:outline-none text-red-600 hover:text-red-800" onClick={() => { setDeleteModelOpened(true); setSelectedTransaction(t) }}>{<TrashIcon />}</button>
                 </td>
               </tr>
             ))}

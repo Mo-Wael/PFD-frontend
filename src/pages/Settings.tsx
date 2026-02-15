@@ -1,6 +1,11 @@
 import { Save, User } from 'lucide-react'
+import { useCurrentUser } from '../hooks/useAuth'
 
 const Settings = () => {
+  const { data: currentUser } = useCurrentUser();
+  console.log("currentUser", currentUser);
+  const user = currentUser;
+
   return (
     <div className='flex flex-col gap-6 p-4 max-w-2xl mx-auto w-full'>
       {/* Profile Information Card */}
@@ -13,8 +18,8 @@ const Settings = () => {
             <User size={40} />
           </div>
           <div className="flex flex-col gap-2 text-center sm:text-left">
-            <p className="text-lg font-semibold text-gray-800">John Doe</p>
-            <p className="text-sm text-gray-600">john.doe@example.com</p>
+            <p className="text-lg font-semibold text-gray-800">{user?.fullName}</p>
+            <p className="text-sm text-gray-600">{user?.email}</p>
             <button className="mt-2 text-sm text-blue-600 hover:text-blue-800 font-medium transition-colors">
               Change Profile Picture
             </button>
@@ -31,7 +36,7 @@ const Settings = () => {
               type="text"
               id="fullname"
               placeholder="Enter your full name"
-              defaultValue="John Doe"
+              defaultValue={user?.fullName}
               className="px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:black/30 focus:border-transparent transition-all"
             />
           </div>
@@ -44,7 +49,7 @@ const Settings = () => {
               type="email"
               id="email"
               placeholder="Enter your email"
-              defaultValue="john.doe@example.com"
+              defaultValue={user?.email}
               className="px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:black/30 focus:border-transparent transition-all"
             />
           </div>

@@ -1,6 +1,20 @@
 import { Link } from "react-router-dom"
+import TransactionDetail from "./TransactionDetail"
+import { useTransactions } from "../../hooks/useTransaction"
+import type { Transaction } from "../../types/Transaction";
 
 const MiniTransaction = () => {
+    const { data: transactionsResponse, isLoading, isError } = useTransactions();
+    const transactions = transactionsResponse?.data.transactions || [];
+
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
+
+    if (isError) {
+        return <div>Error loading transactions</div>;
+    }
+
     return (
         <section
             className="flex flex-3 flex-col bg-white p-6 rounded-xl hover:shadow-lg transition-shadow gap-4"
@@ -21,47 +35,9 @@ const MiniTransaction = () => {
 
             {/* when getting the data from api, map them using the Transaction details component */}
             <div className="overflow-y-auto max-h-[450px] space-y-1 pr-2 custom-scrollbar">
-                <p>transactions</p>
-                <p>transactions</p>
-                <p>transactions</p>
-                <p>transactions</p>
-                <p>transactions</p>
-                <p>transactions</p>
-                <p>transactions</p>
-                <p>transactions</p>
-                <p>transactions</p>
-                <p>transactions</p>
-                <p>transactions</p>
-                <p>transactions</p>
-                <p>transactions</p>
-                <p>transactions</p>
-                <p>transactions</p>
-                <p>transactions</p>
-                <p>transactions</p>
-                <p>transactions</p>
-                <p>transactions</p>
-                <p>transactions</p>
-                <p>transactions</p>
-                <p>transactions</p>
-                <p>transactions</p>
-                <p>transactions</p>
-                <p>transactions</p>
-                <p>transactions</p>
-                <p>transactions</p>
-                <p>transactions</p>
-                <p>transactions</p>
-                <p>transactions</p>
-                <p>transactions</p>
-                <p>transactions</p>
-                <p>transactions</p>
-                <p>transactions</p>
-                <p>transactions</p>
-                <p>transactions</p>
-                <p>transactions</p>
-                <p>transactions</p>
-                <p>transactions</p>
-                <p>transactions</p>
-                <p>transactions</p>
+                {transactions.map((t: Transaction) => (
+                    <TransactionDetail key={t._id} t={t} />
+                ))}
             </div>
         </section>
     )

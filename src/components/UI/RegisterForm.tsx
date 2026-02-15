@@ -11,6 +11,7 @@ type RegisterData = z.infer<typeof registerSchema>;
 const RegisterForm = () => {
   const navigate = useNavigate();
   const { mutateAsync: registerUser } = useRegister();
+
   const {
     register,
     handleSubmit,

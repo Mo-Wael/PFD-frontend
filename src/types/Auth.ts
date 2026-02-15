@@ -6,17 +6,23 @@ export interface AuthState {
 };
 
 export interface AuthResponse {
-    token: string;
-    user: {
-        id: string;
-        email: string;
-    };
+    status: string;
+    data: {
+        token: string;
+        user: {
+            id: string;
+            email: string;
+        };
+    }
 };
 
 export interface CurrentUser {
-    _id: string;
-    fullName: string;
-    email: string;
-    createdAt: string;
-    updatedAt: string;
+    status: string;
+    data: {
+        _id: string | undefined;
+        fullName: string;
+        email: string;
+        createdAt: string;
+        updatedAt: string;
+    }
 }

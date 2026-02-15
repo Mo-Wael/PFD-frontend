@@ -5,7 +5,7 @@ import { Wallet, ArrowDownRight, ArrowUpRight } from 'lucide-react'
 const Logo = ({ type }: { type: string }) => {
   const logoType = type;
 
-  console.log(logoType)
+  // console.log(logoType)
 
   return (
     <div className="flex items-center gap-3">

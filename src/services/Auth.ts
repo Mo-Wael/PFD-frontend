@@ -1,13 +1,5 @@
-import axios from "axios";
+import api from "./api";
 import type { CurrentUser } from "../types/Auth";
-
-const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL,
-    headers: {
-        'Content-Type': 'application/json',
-    }
-});
-const token = localStorage.getItem("token");
 
 export const login = async ({ email, password }: { email: string, password: string }) => {
     const response = await api.post('/user/login', { email, password })
@@ -20,17 +12,12 @@ export const register = async ({ fullName, email, password }: { fullName: string
     return response.data.data
 }
 
-// export const logout = async () => {
-//     const response = await api.post('/user/logout', { headers: { Authorization: `Bearer ${token}` } })
-//     return response.data.data
-// }
-
-export const getCurrentUser = async (token: string) => {
-    const response: CurrentUser = await api.get('/user/me', { headers: { Authorization: `Bearer ${token}` } })
-    return response
+export const getCurrentUser = async () => {
+    const response = await api.get<CurrentUser>('/user/me')
+    return response.data.data
 }
 
 export const deleteUser = async (userId: string) => {
-    const response = await api.delete(`/user/${userId}`, { headers: { Authorization: `Bearer ${token}` } })
+    const response = await api.delete(`/user/${userId}`)
     return response.data.data
 }

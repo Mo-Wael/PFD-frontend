@@ -1,17 +1,27 @@
 import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import { transactions } from "../../data/Transaction";
+import { useTransactions } from "../../hooks/useTransaction";
+// import { transactions } from "../../data/Transaction";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const DoughnutChart = () => {
-  // Aggregate totals by category
+  const { data: transactionsResponse, isLoading, isError } = useTransactions();
+  const transactions = transactionsResponse?.data.transactions || [];
   const categoryTotals: Record<string, number> = {};
-  transactions.forEach((tx) => {
+  transactions?.forEach((tx) => {
     if (tx.type === "expense") {
       categoryTotals[tx.category] = (categoryTotals[tx.category] || 0) + tx.amount;
     }
   });
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    return <div>Error fetching transactions</div>;
+  }
 
   const data = {
     labels: Object.keys(categoryTotals),

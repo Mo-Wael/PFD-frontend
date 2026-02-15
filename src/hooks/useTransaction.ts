@@ -1,9 +1,9 @@
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { createTransaction, deleteTransaction, getTransactionById, getTransactions, getTransactionStatus, updateTransaction } from "../services/Transaction"
-import type { CreateTransaction, UpdateTransaction } from "../types/Transaction";
+import type { UpdateTransaction, TransactionResponse, CreateTransaction } from "../types/Transaction";
 
 export const useTransactions = () => {
-    return useQuery({
+    return useQuery<TransactionResponse>({
         queryKey: ["transactions"],
         queryFn: () => getTransactions(),
     });
@@ -16,21 +16,21 @@ export const useTransaction = (id: string) => {
     });
 };
 
-export const useCreateTransaction = (transaction: CreateTransaction) => {
+export const useCreateTransaction = () => {
     return useMutation({
-        mutationFn: () => createTransaction(transaction),
+        mutationFn: (transaction: CreateTransaction) => createTransaction(transaction),
     });
 };
 
-export const useUpdateTransaction = (id: string, transaction: UpdateTransaction) => {
+export const useUpdateTransaction = () => {
     return useMutation({
-        mutationFn: () => updateTransaction(id, transaction),
+        mutationFn: ({ id, transaction }: { id: string, transaction: UpdateTransaction }) => updateTransaction(id, transaction),
     });
 };
 
-export const useDeleteTransaction = (id: string) => {
+export const useDeleteTransaction = () => {
     return useMutation({
-        mutationFn: () => deleteTransaction(id),
+        mutationFn: (id: string) => deleteTransaction(id),
     });
 };
 

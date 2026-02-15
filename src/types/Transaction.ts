@@ -1,10 +1,35 @@
+// export interface Transaction {
+//   _id: string;
+//   description: string;
+//   amount: number;
+//   type: "income" | "expense";
+//   category: string;
+//   date: string; // ISO format (YYYY-MM-DD)
+// }
+
 export interface Transaction {
-  id: string;
+  _id: string;
   description: string;
   amount: number;
   type: "income" | "expense";
   category: string;
-  date: string; // ISO format (YYYY-MM-DD)
+  transactionDate: string; // ISO format (YYYY-MM-DD or full timestamp)
+  createdAt?: string;      // optional, ISO timestamp
+  updatedAt?: string;      // optional, ISO timestamp
+}
+
+
+export interface TransactionResponse {
+  status: "SUCCESS" | "ERROR" | "FAIL";
+  data: {
+    pagination?: {
+      page: number;
+      limit: number;
+      total: number;
+      totalPages: number;
+    };
+    transactions: Transaction[];
+  }
 }
 
 export interface CreateTransaction {
@@ -12,7 +37,9 @@ export interface CreateTransaction {
   amount: number;
   type: "income" | "expense";
   category: string;
-  date: string; // ISO format (YYYY-MM-DD)
+  transactionDate: string; // ISO format (YYYY-MM-DD or full timestamp)
+  // createdAt?: string;      // optional, ISO timestamp
+  // updatedAt?: string;      // optional, ISO timestamp
 }
 
 export interface UpdateTransaction {
@@ -20,5 +47,11 @@ export interface UpdateTransaction {
   amount?: number;
   type?: "income" | "expense";
   category?: string;
-  date?: string; // ISO format (YYYY-MM-DD)
+  transactionDate?: string; // ISO format (YYYY-MM-DD or full timestamp)
 }
+
+export type StatsPayload = {
+  typeStats: { type: string; totalAmount: number }[];
+  categoryStats: { category: string; totalAmount: number }[];
+  monthlyStats: { year: number; month: number; totalAmount: number }[];
+};
