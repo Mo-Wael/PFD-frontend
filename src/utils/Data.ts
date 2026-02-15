@@ -5,7 +5,7 @@ export const normalizeMonth = (m: number, y: number) =>
     });
 
 export const formatCurrency = (amount: number) =>
-    new Intl.NumberFormat("ar-EG", {
+    new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "EGP"
     }).format(amount);

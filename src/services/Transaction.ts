@@ -1,6 +1,6 @@
 import api from './api';
 import type { StatsPayload, Transaction, TransactionResponse, UpdateTransaction, CreateTransaction } from '../types/Transaction';
-import type { ApiResponse } from '../types/api';
+// import type { ApiResponse } from '../types/api';
 
 export const getTransactions = async (): Promise<TransactionResponse> => {
     const response = await api.get<TransactionResponse>('/transaction/')
@@ -11,6 +11,16 @@ export const getTransactionById = async (id: string): Promise<Transaction> => {
     const response = await api.get<Transaction>(`/transaction/${id}`)
     return response.data
 };
+
+export const getTransactionByDate = async (date: Date): Promise<TransactionResponse> => {
+    const response = await api.get<TransactionResponse>(
+        "/transaction/date",
+        { params: { date: date.toISOString() } }
+    );
+
+    return response.data;
+};
+
 
 export const createTransaction = async (transaction: CreateTransaction): Promise<Transaction> => {
     const response = await api.post<Transaction>('/transaction', transaction)
@@ -34,7 +44,7 @@ export const getTransactionStatus = async (): Promise<StatsPayload> => {
     return response.data;
 };
 
-export const getTransactionCategories = async (): Promise<string[]> => {
-    const response = await api.get<string[]>('/transaction/categories')
-    return response.data
-};
+// export const getTransactionCategories = async (): Promise<string[]> => {
+//     const response = await api.get<string[]>('/transaction/categories')
+//     return response.data
+// };

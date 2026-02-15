@@ -1,41 +1,27 @@
 import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import { useTransactions } from "../../hooks/useTransaction";
-// import { transactions } from "../../data/Transaction";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const DoughnutChart = () => {
-  const { data: transactionsResponse, isLoading, isError } = useTransactions();
-  const transactions = transactionsResponse?.data.transactions || [];
-  const categoryTotals: Record<string, number> = {};
-  transactions?.forEach((tx) => {
-    if (tx.type === "expense") {
-      categoryTotals[tx.category] = (categoryTotals[tx.category] || 0) + tx.amount;
-    }
-  });
+const DoughnutChart = ({ categoryData }: { categoryData: { category: string; totalAmount: number }[] }) => {
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  const labels = categoryData.map(item => item.category);
 
-  if (isError) {
-    return <div>Error fetching transactions</div>;
-  }
+  const amounts = categoryData.map(item => item.totalAmount);
 
   const data = {
-    labels: Object.keys(categoryTotals),
+    labels: labels,
     datasets: [
       {
         label: "Expenses by Category",
-        data: Object.values(categoryTotals),
+        data: amounts,
         backgroundColor: [
-          "#FF6384", // Food
-          "#36A2EB", // Entertainment
-          "#FFCE56", // Utilities
-          "#4BC0C0", // Others
-          "#9966FF", // Sale
-          "#FF9F40"  // Freelance
+          "#FF6384",
+          "#36A2EB",
+          "#FFCE56",
+          "#4BC0C0",
+          "#9966FF",
+          "#FF9F40"
         ],
         borderWidth: 1,
       },
@@ -44,22 +30,32 @@ const DoughnutChart = () => {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         position: "bottom" as const,
+        labels: {
+          usePointStyle: true,
+          padding: 20,
+          font: { size: 12 }
+        },
       },
-      title: {
-        display: true,
-        text: "Expense Breakdown",
-      },
+      tooltip: {
+        backgroundColor: '#1e293b',
+        padding: 12,
+        bodyFont: { size: 14 },
+      }
     },
+    cutout: "55%",
   };
 
   return (
-    //  w-fit
-    <div className="flex flex-2 flex-col w-full h-auto items-start sm:items-center justify-between bg-white p-6 rounded-xl hover:shadow-lg transition-shadow gap-4">
-      <h1 className="text-xl font-bold">Spending by Category</h1>
-      <Doughnut data={data} options={options} />
+    <div className="flex flex-col w-full h-full min-h-[400px] bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all">
+      <h1 className="text-lg font-semibold text-gray-800 mb-4">Spending by Category</h1>
+
+      <div className="relative w-full flex-1">
+        <Doughnut data={data} options={options} />
+      </div>
     </div>
   );
 }

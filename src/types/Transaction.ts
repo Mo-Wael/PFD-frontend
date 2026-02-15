@@ -51,7 +51,11 @@ export interface UpdateTransaction {
 }
 
 export type StatsPayload = {
-  typeStats: { type: string; totalAmount: number }[];
-  categoryStats: { category: string; totalAmount: number }[];
-  monthlyStats: { year: number; month: number; totalAmount: number }[];
+  data: {
+    totalIncome: { totalAmount: number; type: string }[];
+    totalExpense: { totalAmount: number; type: string }[];
+    categoryStats: { category: string; totalAmount: number }[];
+    categoryExpenses: { category: string; totalAmount: number }[];
+    monthlyStats: { year: number; month: number; totalAmount: number }[];
+  }
 };
