@@ -4,18 +4,11 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { useTransactionByDate } from "../hooks/useTransaction";
 
-type Transaction = {
-  id: string;
-  description: string;
-  amount: number;
-  date: Date;
-};
-
 const CalendarPage = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   // const [transactions, setTransactions] = useState<Transaction[]>([]);
   const { data, isLoading, isError } = useTransactionByDate(selectedDate);
-  console.log("transactionDate", data);
+  // console.log("transactionDate", data);
 
   // safer date formatting
   const formattedDate =
@@ -28,8 +21,16 @@ const CalendarPage = () => {
 
   const dayTransactions = data?.data?.transactions ?? [];
 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    return <div>Error...</div>;
+  }
+
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
+    <div className="max-h-screen bg-gray-50 p-4">
       <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 max-w-7xl mx-auto w-full">
         {/* Calendar Card */}
         <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow p-4 md:p-6 h-fit w-full lg:w-auto lg:min-w-[380px]">

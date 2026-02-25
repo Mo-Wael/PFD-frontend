@@ -10,7 +10,7 @@ import { useAuthStore } from './store/authStore'
 function App() {
   // const isAuthenticated = !!localStorage.getItem("authToken") || true;
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated());
-  console.log("isAuthenticated", isAuthenticated);
+  // console.log("isAuthenticated", isAuthenticated);
 
   return (
     <>

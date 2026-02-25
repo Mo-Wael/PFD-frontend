@@ -1,12 +1,14 @@
-import { Bell, Search, Menu } from "lucide-react";
+import { Bell, Search, Menu, User } from "lucide-react";
 import { useLocation } from 'react-router-dom';
 import { useState } from 'react';
+import { useCurrentUser } from "../../hooks/useAuth";
 
 interface NavbarProps {
   onMobileMenuClick: () => void;
 }
 
 const Navbar = ({ onMobileMenuClick }: NavbarProps) => {
+  const { data: currentUser } = useCurrentUser();
   const location = useLocation();
   const [showSearch, setShowSearch] = useState(false);
 
@@ -41,14 +43,14 @@ const Navbar = ({ onMobileMenuClick }: NavbarProps) => {
       {/* Right Section: Search + Icons */}
       <div className="flex items-center gap-2 md:gap-4">
         {/* Search Bar - Hidden on mobile by default, expandable */}
-        <div className="hidden lg:block relative w-full max-w-md">
+        {/* <div className="hidden lg:block relative w-full max-w-md">
           <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
           <input
             type="text"
             placeholder="Search transactions..."
             className="w-full pl-10 pr-4 py-2 bg-[#f7f8f9] border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
           />
-        </div>
+        </div> */}
 
         {/* Mobile Search Toggle */}
         <button
@@ -60,7 +62,7 @@ const Navbar = ({ onMobileMenuClick }: NavbarProps) => {
         </button>
 
         {/* Icons */}
-        <div className="flex items-center gap-3 md:gap-4">
+        <div className="flex items-center gap-4 md:gap-4">
           {/* Notification Bell */}
           <button className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors">
             <Bell className="text-gray-600" size={20} />
@@ -68,9 +70,15 @@ const Navbar = ({ onMobileMenuClick }: NavbarProps) => {
           </button>
 
           {/* Profile Icon */}
-          <button className="flex items-center justify-center h-8 w-8 md:h-9 md:w-9 rounded-full bg-gray-800 text-white font-semibold text-sm hover:bg-gray-700 transition-colors">
-            JD
-          </button>
+          {currentUser?.profileImage ? (
+            <img
+              src={currentUser.profileImage}
+              alt="Profile"
+              className="h-8 w-8 md:h-9 md:w-9 rounded-full object-cover mr-4"
+            />
+          ) : (
+            <User size={40} className="mr-4" />
+          )}
         </div>
       </div>
 

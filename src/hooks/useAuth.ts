@@ -1,6 +1,7 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { login, getCurrentUser, register } from "../services/Auth";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { login, getCurrentUser, register, updateUser } from "../services/Auth";
 import { useAuthStore } from "../store/authStore";
+import type { UpdatedUser } from "../types/Auth";
 
 export const useCurrentUser = () => {
     const token = useAuthStore((s) => s.token);
@@ -12,6 +13,20 @@ export const useCurrentUser = () => {
     });
 };
 
+export const useUpdateUser = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (updatedUser: UpdatedUser) => updateUser(updatedUser),
+        onSuccess: (data) => {
+            // console.log("data", data);
+            queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+        },
+        onError: (error) => {
+            // console.log("error", error);
+        }
+    })
+}
 
 export const useLogin = () => {
     const setToken = useAuthStore((s) => s.setToken);

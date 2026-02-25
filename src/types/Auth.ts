@@ -22,7 +22,19 @@ export interface CurrentUser {
         _id: string | undefined;
         fullName: string;
         email: string;
+        phoneNumber: string;
+        address: string;
+        profileImage: string;
         createdAt: string;
         updatedAt: string;
     }
 }
+
+export interface UpdatedUserData {
+    fullName: string;
+    phoneNumber: string;
+    address: string;
+    profileImage: File | string | null;
+}
+
+export type UpdatedUser = UpdatedUserData | FormData;

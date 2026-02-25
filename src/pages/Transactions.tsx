@@ -3,19 +3,16 @@ import Logo from '../components/UI/Logo';
 import { useTransactions } from '../hooks/useTransaction';
 // import { useCurrentUser } from '../hooks/useAuth';
 import type { Transaction } from '../types/Transaction';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import AddTransactionModel from '../components/UI/AddTransactionModel';
 import { formatDate } from '../utils/Data';
 import EditTransactionModel from '../components/UI/EditTransactionModel';
 import DeleteTransactionModel from '../components/UI/DeleteTransactionModel';
 
-// const transactions = [
-//   { date: "2026-02-01", category: "Food", description: "Grocery shopping", type: "expense", amount: "$25.00" },
-//   { date: "2026-02-02", category: "Salary", description: "Monthly paycheck", type: "income", amount: "$1,200.00" },
-//   { date: "2026-02-03", category: "Transport", description: "Public transit", type: "expense", amount: "$15.00" },
-// ];
-
 const Transactions = () => {
+  const [transactionSearch, setTransactionSearch] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [typeFilter, setTypeFilter] = useState("all");
   const [modelOpend, setModelOpend] = useState(false);
   const [editModelOpened, setEditModelOpened] = useState(false);
   const [deleteModelOpened, setDeleteModelOpened] = useState(false);
@@ -23,6 +20,7 @@ const Transactions = () => {
   const { data: transactionsResponse, isLoading, isError } = useTransactions();
   const transactions = transactionsResponse?.data.transactions || [];
   // console.log("transactions", transactions);
+  // console.log('searched transaction', transactionSearch);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -44,16 +42,33 @@ const Transactions = () => {
     return <DeleteTransactionModel modelOpened={deleteModelOpened} setDeleteModelOpened={setDeleteModelOpened} transaction={selectedTransaction} />
   }
 
+  const filteredTransactions = useMemo(() => {
+    return transactions.filter((t: Transaction) => {
+      const matchSearch =
+        t.description.toLowerCase().includes(transactionSearch.toLowerCase());
+
+      const matchCategory =
+        categoryFilter === "all" ||
+        t.category.toLowerCase() === categoryFilter.toLowerCase();
+
+      const matchType =
+        typeFilter === "all" ||
+        t.type.toLowerCase() === typeFilter.toLowerCase();
+
+      return matchSearch && matchCategory && matchType;
+    });
+  }, [transactions, transactionSearch, categoryFilter, typeFilter]);
+
   return (
     <div className='flex h-screen flex-col gap-4 p-4'>
       {/* adding and searching and filtering header */}
       <div className="flex flex-col sm:flex-row align-center justify-between items-baseline gap-3 space-y-2">
         <div className="relative w-full max-w-md">
           <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
-          <input type="text" placeholder="Search transactions..." className="w-full pl-10 pr-4 py-2 bg-[#f7f8f9] border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black" />
+          <input type="text" value={transactionSearch} onChange={(e) => setTransactionSearch(e.target.value)} placeholder="Search transactions..." className="w-full pl-10 pr-4 py-2 bg-[#f7f8f9] border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black" />
         </div>        {/* by category */}
-        <select name="category" id="category" className='flex-1 p-2 border border-gray-300 rounded-xl'>
-          <option value="all">All</option>
+        <select name="category" id="category" value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)} className='flex-1 p-2 border border-gray-300 rounded-xl'>
+          <option value="all">Category</option>
           <option value="food">Food</option>
           <option value="transport">Transport</option>
           <option value="education">Education</option>
@@ -62,18 +77,18 @@ const Transactions = () => {
           <option value="entertainment">Entertainment</option>
         </select>
         {/* by income and expense */}
-        <select name="type" id="type" className='flex-1 p-2 border border-gray-300 rounded-xl'>
-          <option value="all">All</option>
+        <select name="type" id="type" value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)} className='flex-1 p-2 border border-gray-300 rounded-xl'>
+          <option value="all">Type</option>
           <option value="income">Income</option>
           <option value="expense">Expense</option>
         </select>
-        <button onClick={() => setModelOpend(!modelOpend)} className='flex items-center cursor-pointer gap-2 p-2 border border-gray-300 bg-background-main text-white rounded-xl hover:bg-background-main/80'>
+        <button onClick={() => setModelOpend(true)} className='flex items-center cursor-pointer gap-2 p-2 border border-gray-300 bg-background-main text-white rounded-xl hover:bg-background-main/80'>
           <PlusIcon className="w-5 h-5" /> Add Transaction
         </button>
       </div>
 
       {/* Transactions Table */}
-      <div className="overflow-auto">
+      <div className="overflow-auto h-screen">
         <table className="min-w-full px-3 py-6 border-collapse bg-white shadow-md rounded-lg">
           <thead>
             <tr className="bg-slate-100 text-slate-500 text-left">
@@ -85,21 +100,23 @@ const Transactions = () => {
             </tr>
           </thead>
           <tbody>
-            {transactions.map((t: Transaction) => (
-              <tr key={t._id} className="hover:bg-slate-50 transition-colors font-semibold" >
-                <td className={`px-4 py-4 flex gap-4 items-center`}>{<Logo type={t.type} />}{t.description}</td>
-                <td className="px-4 py-4">{t.category}</td>
-                <td className="px-4 py-4">{formatDate(t.transactionDate)}</td>
-                <td className={`px-4 py-4 font-semibold ${t.type === "income" ? "text-emerald-600" : "text-rose-600"}`} >
-                  {t.type === "income" ? "+" : "-"}
-                  {t.amount}
-                </td>
-                <td className="px-4 py-4 items-center">
-                  <button className="cursor-pointer focus:outline-none text-blue-600 hover:text-blue-800 mr-2" onClick={() => { setEditModelOpened(true); setSelectedTransaction(t); }}>{<EditIcon />}</button>
-                  <button className="cursor-pointer focus:outline-none text-red-600 hover:text-red-800" onClick={() => { setDeleteModelOpened(true); setSelectedTransaction(t) }}>{<TrashIcon />}</button>
-                </td>
-              </tr>
-            ))}
+            {
+              filteredTransactions.map((t: Transaction) => (
+                <tr key={t._id} className="hover:bg-slate-50 transition-colors font-semibold" >
+                  <td className={`px-4 py-4 flex gap-4 items-center`}>{<Logo type={t.type} />}{t.description}</td>
+                  <td className="px-4 py-4">{t.category}</td>
+                  <td className="px-4 py-4">{formatDate(t.transactionDate)}</td>
+                  <td className={`px-4 py-4 font-semibold ${t.type === "income" ? "text-emerald-600" : "text-rose-600"}`} >
+                    {t.type === "income" ? "+" : "-"}
+                    {t.amount}
+                  </td>
+                  <td className="px-4 py-4 items-center">
+                    <button className="cursor-pointer focus:outline-none text-blue-600 hover:text-blue-800 mr-2" onClick={() => { setEditModelOpened(true); setSelectedTransaction(t); }}>{<EditIcon />}</button>
+                    <button className="cursor-pointer focus:outline-none text-red-600 hover:text-red-800" onClick={() => { setDeleteModelOpened(true); setSelectedTransaction(t) }}>{<TrashIcon />}</button>
+                  </td>
+                </tr>
+              ))
+            }
           </tbody>
         </table>
       </div>

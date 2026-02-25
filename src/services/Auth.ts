@@ -1,9 +1,9 @@
 import api from "./api";
-import type { CurrentUser } from "../types/Auth";
+import type { CurrentUser, UpdatedUser } from "../types/Auth";
 
 export const login = async ({ email, password }: { email: string, password: string }) => {
     const response = await api.post('/user/login', { email, password })
-    console.log("response", response.data);
+    // console.log("response", response.data);
     return response.data.data
 }
 
@@ -19,5 +19,11 @@ export const getCurrentUser = async () => {
 
 export const deleteUser = async (userId: string) => {
     const response = await api.delete(`/user/${userId}`)
+    return response.data.data
+}
+
+// export const updateUser = async (userId: string, updatedUser: UpdatedUser) => {
+export const updateUser = async (updatedUser: UpdatedUser) => {
+    const response = await api.patch(`/user/me`, updatedUser)
     return response.data.data
 }

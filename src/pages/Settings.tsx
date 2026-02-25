@@ -1,10 +1,52 @@
 import { Save, User } from 'lucide-react'
-import { useCurrentUser } from '../hooks/useAuth'
+import { useCurrentUser, useUpdateUser } from '../hooks/useAuth'
+import { useEffect, useState, type ChangeEvent } from 'react';
+import type { UpdatedUserData } from '../types/Auth';
 
 const Settings = () => {
   const { data: currentUser } = useCurrentUser();
-  console.log("currentUser", currentUser);
   const user = currentUser;
+  const updateUser = useUpdateUser();
+  const [updatedUser, setUpdatedUser] = useState<UpdatedUserData>({
+    fullName: "",
+    phoneNumber: "",
+    address: "",
+    profileImage: null,
+  });
+
+  useEffect(() => {
+    if (currentUser) {
+      setUpdatedUser({
+        fullName: currentUser.fullName ?? "",
+        phoneNumber: currentUser.phoneNumber ?? "",
+        address: currentUser.address ?? "",
+        profileImage: currentUser.profileImage ?? null,
+      });
+    }
+  }, [currentUser]);
+
+  const handleUpdateUser = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!currentUser?._id) return;
+
+    const formData = new FormData();
+    formData.append("fullName", updatedUser.fullName);
+    formData.append("phoneNumber", updatedUser.phoneNumber);
+    formData.append("address", updatedUser.address);
+
+    if (updatedUser.profileImage instanceof File) {
+      formData.append("profileImage", updatedUser.profileImage);
+    }
+
+    updateUser.mutate(formData);
+  };
+
+  function handleFileUpload(event: ChangeEvent<HTMLInputElement>): void {
+    const file = event.target.files?.[0];
+    if (file) {
+      setUpdatedUser({ ...updatedUser, profileImage: file });
+    }
+  }
 
   return (
     <div className='flex flex-col gap-6 p-4 max-w-2xl mx-auto w-full'>
@@ -14,15 +56,24 @@ const Settings = () => {
 
         {/* Profile Picture Section */}
         <div className="flex flex-col sm:flex-row items-center gap-6 pb-6 border-b border-gray-200">
-          <div className="relative w-24 h-24 rounded-full bg-linear-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-3xl font-bold shadow-lg">
-            <User size={40} />
+          <div className="relative w-24 h-24 rounded-full bg-linear-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-3xl font-bold shadow-lg overflow-hidden">
+            {updatedUser.profileImage ? (
+              <img
+                src={updatedUser.profileImage instanceof File ? URL.createObjectURL(updatedUser.profileImage) : updatedUser.profileImage}
+                alt="Profile"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <User size={40} />
+            )}
           </div>
           <div className="flex flex-col gap-2 text-center sm:text-left">
             <p className="text-lg font-semibold text-gray-800">{user?.fullName}</p>
             <p className="text-sm text-gray-600">{user?.email}</p>
-            <button className="mt-2 text-sm text-blue-600 hover:text-blue-800 font-medium transition-colors">
+            <label className="mt-2 text-sm text-blue-600 hover:text-blue-800 font-medium transition-colors cursor-pointer">
               Change Profile Picture
-            </button>
+              <input type="file" accept="image/*" className="hidden" onChange={handleFileUpload} disabled={updateUser.isPending} />
+            </label>
           </div>
         </div>
 
@@ -36,20 +87,9 @@ const Settings = () => {
               type="text"
               id="fullname"
               placeholder="Enter your full name"
-              defaultValue={user?.fullName}
-              className="px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:black/30 focus:border-transparent transition-all"
-            />
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <label htmlFor="email" className="text-sm font-semibold text-gray-700">
-              Email Address
-            </label>
-            <input
-              type="email"
-              id="email"
-              placeholder="Enter your email"
-              defaultValue={user?.email}
+              // defaultValue={user?.fullName}
+              value={updatedUser.fullName}
+              onChange={(e) => setUpdatedUser({ ...updatedUser, fullName: e.target.value })}
               className="px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:black/30 focus:border-transparent transition-all"
             />
           </div>
@@ -61,8 +101,10 @@ const Settings = () => {
             <input
               type="tel"
               id="phone"
-              placeholder="Enter your phone number"
-              defaultValue="+20 122 555 5555"
+              placeholder="Enter your phone number in format: +20123456789"
+              // defaultValue={user?.phoneNumber}
+              value={updatedUser.phoneNumber}
+              onChange={(e) => setUpdatedUser({ ...updatedUser, phoneNumber: e.target.value })}
               className="px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:black/30 focus:border-transparent transition-all"
             />
           </div>
@@ -75,16 +117,21 @@ const Settings = () => {
               type="text"
               id="address"
               placeholder="Enter your address"
-              defaultValue="Cairo, Down Town, Talat Harb Square"
+              // defaultValue={user?.address}
+              value={updatedUser.address}
+              onChange={(e) => setUpdatedUser({ ...updatedUser, address: e.target.value })}
               className="px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:black/30 focus:border-transparent transition-all"
             />
           </div>
 
           <button
             type="submit"
-            className='flex items-center justify-center gap-2 px-6 py-3 mt-2 bg-background-main text-white rounded-lg hover:bg-background-main/90 transition-all shadow-md hover:shadow-lg font-semibold'
+            disabled={updateUser.isPending}
+            className={`flex items-center justify-center gap-2 px-6 py-3 mt-2 text-white rounded-lg transition-all shadow-md hover:shadow-lg font-semibold cursor-pointer ${updateUser.isPending ? 'bg-gray-400 cursor-not-allowed' : 'bg-background-main hover:bg-background-main/90'}`}
+            onClick={handleUpdateUser}
           >
-            <Save className="w-5 h-5" /> Save Changes
+            <Save className="w-5 h-5" />
+            {updateUser.isPending ? 'Saving...' : 'Save Changes'}
           </button>
         </form>
       </div>

@@ -40,7 +40,7 @@ const RegisterForm = () => {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit(data => console.log("The data", data))} className="space-y-4">
+        <form onSubmit={handleSubmit(handleRegister)} className="space-y-4">
           {/* Full Name */}
           <div className="relative">
             <User className="absolute left-3 top-3 text-gray-400" />
