@@ -2,6 +2,7 @@ import { X } from "lucide-react";
 import { useState } from "react";
 import { useCreateTransaction } from "../../hooks/useTransaction";
 import type { CreateTransaction } from "../../types/Transaction";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface IProps {
     modelOpend: boolean;
@@ -18,15 +19,17 @@ const AddTransactionModel = ({ modelOpend, setModelOpend }: IProps) => {
         transactionDate: new Date().toISOString().split('T')[0]
     });
     const { mutateAsync: createTransaction } = useCreateTransaction()
+    const queryClient = useQueryClient();
 
     const handleAddingTransaction = async (e: React.FormEvent) => {
         e.preventDefault();
         await createTransaction(transactionDetails);
+        queryClient.invalidateQueries({ queryKey: ["transactions"] });
         setModelOpend(false);
-        window.location.reload();
     }
 
     return (
+        modelOpend &&
         <div>
             <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
                 <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">

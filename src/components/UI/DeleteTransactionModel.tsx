@@ -1,6 +1,7 @@
 import { X } from "lucide-react";
 import type { Transaction } from "../../types/Transaction";
 import { useDeleteTransaction } from "../../hooks/useTransaction";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface IProps {
     modelOpened: boolean;
@@ -10,11 +11,13 @@ interface IProps {
 
 const DeleteTransactionModel = ({ modelOpened, setDeleteModelOpened, transaction }: IProps) => {
     const { mutateAsync: deleteTransaction } = useDeleteTransaction();
+    const queryClient = useQueryClient();
 
     const handleDeleteTransaction = async (id: string) => {
         await deleteTransaction(id);
+        queryClient.invalidateQueries({ queryKey: ["transactions"] });
         setDeleteModelOpened(false);
-        window.location.reload();
+        // window.location.reload();
     }
 
     return (

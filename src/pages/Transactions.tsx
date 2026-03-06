@@ -4,10 +4,11 @@ import { useTransactions } from '../hooks/useTransaction';
 // import { useCurrentUser } from '../hooks/useAuth';
 import type { Transaction } from '../types/Transaction';
 import { useMemo, useState } from 'react';
-import AddTransactionModel from '../components/UI/AddTransactionModel';
+// import AddTransactionModel from '../components/UI/AddTransactionModel';
 import { formatDate } from '../utils/Data';
 import EditTransactionModel from '../components/UI/EditTransactionModel';
 import DeleteTransactionModel from '../components/UI/DeleteTransactionModel';
+import AddTransactionModel from '../components/UI/AddTransactionModel';
 
 const Transactions = () => {
   const [transactionSearch, setTransactionSearch] = useState("");
@@ -30,18 +31,6 @@ const Transactions = () => {
     return <div>Error loading transactions</div>;
   }
 
-  if (modelOpend) {
-    return <AddTransactionModel modelOpend={modelOpend} setModelOpend={setModelOpend} />
-  }
-
-  if (editModelOpened) {
-    return <EditTransactionModel modelOpened={editModelOpened} setEditModelOpened={setEditModelOpened} transaction={selectedTransaction} />
-  }
-
-  if (deleteModelOpened) {
-    return <DeleteTransactionModel modelOpened={deleteModelOpened} setDeleteModelOpened={setDeleteModelOpened} transaction={selectedTransaction} />
-  }
-
   const filteredTransactions = useMemo(() => {
     return transactions.filter((t: Transaction) => {
       const matchSearch =
@@ -61,12 +50,38 @@ const Transactions = () => {
 
   return (
     <div className='flex h-screen flex-col gap-4 p-4'>
+
+      {modelOpend && (
+        <AddTransactionModel
+          modelOpend={modelOpend}
+          setModelOpend={setModelOpend}
+        />
+      )}
+
+      {editModelOpened && (
+        <EditTransactionModel
+          modelOpened={editModelOpened}
+          setEditModelOpened={setEditModelOpened}
+          transaction={selectedTransaction}
+        />
+      )}
+
+      {deleteModelOpened && (
+        <DeleteTransactionModel
+          modelOpened={deleteModelOpened}
+          setDeleteModelOpened={setDeleteModelOpened}
+          transaction={selectedTransaction}
+        />
+      )}
+
+
       {/* adding and searching and filtering header */}
       <div className="flex flex-col sm:flex-row align-center justify-between items-baseline gap-3 space-y-2">
         <div className="relative w-full max-w-md">
           <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
           <input type="text" value={transactionSearch} onChange={(e) => setTransactionSearch(e.target.value)} placeholder="Search transactions..." className="w-full pl-10 pr-4 py-2 bg-[#f7f8f9] border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black" />
-        </div>        {/* by category */}
+        </div>
+        {/* by category */}
         <select name="category" id="category" value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)} className='flex-1 p-2 border border-gray-300 rounded-xl'>
           <option value="all">Category</option>
           <option value="food">Food</option>
@@ -82,6 +97,7 @@ const Transactions = () => {
           <option value="income">Income</option>
           <option value="expense">Expense</option>
         </select>
+        {/* Adding new Transaction */}
         <button onClick={() => setModelOpend(true)} className='flex items-center cursor-pointer gap-2 p-2 border border-gray-300 bg-background-main text-white rounded-xl hover:bg-background-main/80'>
           <PlusIcon className="w-5 h-5" /> Add Transaction
         </button>

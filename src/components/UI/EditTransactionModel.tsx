@@ -3,6 +3,7 @@ import type { Transaction, UpdateTransaction } from "../../types/Transaction";
 import { useUpdateTransaction } from "../../hooks/useTransaction";
 import { X } from "lucide-react";
 import { formatDate } from "../../utils/Data";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface IProps {
     modelOpened: boolean;
@@ -19,15 +20,16 @@ const EditTransactionModel = ({ modelOpened, setEditModelOpened, transaction }: 
         transactionDate: transaction?.transactionDate || ""
     });
     const { mutateAsync: UpdateTransaction } = useUpdateTransaction()
+    const queryClient = useQueryClient();
 
     const handleAddingTransaction = async (e: React.FormEvent) => {
-        // e.preventDefault();
+        e.preventDefault();
         await UpdateTransaction({ id: transaction?._id || "", transaction: transactionDetails });
+        queryClient.invalidateQueries({ queryKey: ["transactions"] });
         setEditModelOpened(false);
-        window.location.reload();
     }
 
-    console.log(transaction?.transactionDate);
+    // console.log(transaction?.transactionDate);
 
     return (
         <div>
