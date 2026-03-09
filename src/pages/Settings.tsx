@@ -2,10 +2,12 @@ import { Save, User } from 'lucide-react'
 import { useCurrentUser, useUpdateUser } from '../hooks/useAuth'
 import { useEffect, useState, type ChangeEvent } from 'react';
 import type { UpdatedUserData } from '../types/Auth';
+import DeleteUserModal from '../components/UI/DeleteUserModal';
 
 const Settings = () => {
   const { data: currentUser } = useCurrentUser();
   const user = currentUser;
+  const [modalOpen, setModalOpen] = useState(false);
   const updateUser = useUpdateUser();
   const [updatedUser, setUpdatedUser] = useState<UpdatedUserData>({
     fullName: "",
@@ -50,6 +52,7 @@ const Settings = () => {
 
   return (
     <div className='flex flex-col gap-6 p-4 max-w-2xl mx-auto w-full'>
+      {modalOpen && <DeleteUserModal modalOpen={modalOpen} setModalOpen={setModalOpen} />}
       {/* Profile Information Card */}
       <div className="flex flex-col bg-white p-6 md:p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow gap-6 w-full">
         <h1 className="text-2xl md:text-3xl font-bold text-gray-800">Profile Information</h1>
@@ -142,7 +145,7 @@ const Settings = () => {
         <p className='text-gray-600 text-sm md:text-base'>
           Once you delete your account, there is no going back. Please be certain.
         </p>
-        <button className='px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all shadow-md hover:shadow-lg font-semibold w-full sm:w-auto'>
+        <button onClick={() => setModalOpen(true)} className='px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all shadow-md hover:shadow-lg font-semibold w-full sm:w-auto'>
           Delete Account
         </button>
       </div>

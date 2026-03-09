@@ -17,8 +17,8 @@ export const getCurrentUser = async () => {
     return response.data.data
 }
 
-export const deleteUser = async (userId: string) => {
-    const response = await api.delete(`/user/${userId}`)
+export const deleteUser = async () => {
+    const response = await api.delete(`/user/me`)
     return response.data.data
 }
 

@@ -22,6 +22,12 @@ const NavigationButton = ({ image, name, collapsed, linkTo, onClick }: IProps) =
     const navigate = useNavigate();
 
     const handleClick = () => {
+        if (name === "Logout") {
+            localStorage.removeItem("token");
+            navigate("/login");
+            window.location.reload();
+            return;
+        }
         navigate(linkTo);
         onClick?.();
     };

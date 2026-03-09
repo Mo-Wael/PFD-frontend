@@ -1,7 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { login, getCurrentUser, register, updateUser } from "../services/Auth";
+import { login, getCurrentUser, register, updateUser, deleteUser } from "../services/Auth";
 import { useAuthStore } from "../store/authStore";
 import type { UpdatedUser } from "../types/Auth";
+import { redirect } from "react-router-dom";
 
 export const useCurrentUser = () => {
     const token = useAuthStore((s) => s.token);
@@ -60,5 +61,25 @@ export const useLogout = () => {
         mutationFn: async () => {
             clearToken();
         },
+    })
+}
+
+export const useDeleteUser = () => {
+    const clearToken = useAuthStore((s) => s.clearToken);
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: () => deleteUser(),
+        onSuccess: (data) => {
+            // console.log("data", data);
+            queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+            redirect("/login");
+            window.location.reload();
+            clearToken();
+
+        },
+        onError: (error) => {
+            // console.log("error", error);
+        }
     })
 }

@@ -5,7 +5,7 @@ import type { Transaction } from "../../types/Transaction";
 
 const MiniTransaction = () => {
     const { data: transactionsResponse, isLoading, isError } = useTransactions();
-    const transactions = transactionsResponse?.data.transactions || [];
+    const transactions = transactionsResponse?.data.transactions.slice(0, 5) || [];
 
     if (isLoading) {
         return <div>Loading...</div>;

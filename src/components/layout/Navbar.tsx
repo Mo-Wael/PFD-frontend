@@ -66,7 +66,7 @@ const Navbar = ({ onMobileMenuClick }: NavbarProps) => {
           {/* Notification Bell */}
           <button className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors">
             <Bell className="text-gray-600" size={20} />
-            <span className="absolute top-1.5 right-1.5 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"></span>
+            {/* <span className="absolute top-1.5 right-1.5 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"></span> */}
           </button>
 
           {/* Profile Icon */}

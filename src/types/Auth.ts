@@ -25,6 +25,7 @@ export interface CurrentUser {
         phoneNumber: string;
         address: string;
         profileImage: string;
+        role: "user" | "admin";
         createdAt: string;
         updatedAt: string;
     }

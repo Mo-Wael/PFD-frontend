@@ -7,9 +7,8 @@ import { useTransactionstatus } from "../hooks/useTransaction";
 
 const Dashboard = () => {
   const { data: stats } = useTransactionstatus();
-  // console.log("statusDate:", stats);
-  const totalIncome = stats?.data?.totalIncome[0].totalAmount || 0;
-  const totalExpenses = stats?.data?.totalExpense[0].totalAmount || 0;
+  const totalIncome = stats?.data?.totalIncome?.[0]?.totalAmount || 0;
+  const totalExpenses = stats?.data?.totalExpense?.[0]?.totalAmount || 0;
   const categoryExpenses = stats?.data?.categoryExpenses || [];
 
   // console.log("totalIncome", totalIncome);

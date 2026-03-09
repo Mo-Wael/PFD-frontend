@@ -2,8 +2,8 @@ import api from './api';
 import type { StatsPayload, Transaction, TransactionResponse, UpdateTransaction, CreateTransaction } from '../types/Transaction';
 // import type { ApiResponse } from '../types/api';
 
-export const getTransactions = async (): Promise<TransactionResponse> => {
-    const response = await api.get<TransactionResponse>('/transaction/')
+export const getTransactions = async (page = 1, limit = 10, search = "", category = "all", type = "all"): Promise<TransactionResponse> => {
+    const response = await api.get<TransactionResponse>(`/transaction?page=${page}&limit=${limit}&search=${search}&category=${category}&type=${type}`)
     return response.data
 };
 

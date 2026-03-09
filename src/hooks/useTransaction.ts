@@ -2,10 +2,10 @@ import { useMutation, useQuery } from "@tanstack/react-query"
 import { createTransaction, deleteTransaction, getTransactionByDate, getTransactionById, getTransactions, getTransactionStatus, updateTransaction } from "../services/Transaction"
 import type { UpdateTransaction, TransactionResponse, CreateTransaction } from "../types/Transaction";
 
-export const useTransactions = () => {
+export const useTransactions = (page = 1, search = "", category = "all", type = "all") => {
     return useQuery<TransactionResponse>({
-        queryKey: ["transactions"],
-        queryFn: () => getTransactions(),
+        queryKey: ["transactions", page, search, category, type],
+        queryFn: () => getTransactions(page, 10, search, category, type),
     });
 };
 
