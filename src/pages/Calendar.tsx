@@ -33,7 +33,7 @@ const CalendarPage = () => {
     <div className="max-h-screen bg-gray-50 p-4">
       <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 max-w-7xl mx-auto w-full">
         {/* Calendar Card */}
-        <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow p-4 md:p-6 h-fit w-full lg:w-auto lg:min-w-[380px]">
+        <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow p-4 md:p-6 h-fit w-full lg:w-auto lg:min-w-95">
           <div className="flex items-center gap-2 mb-4">
             <CalendarDays className="w-5 h-5" />
             <p className="text-lg md:text-xl font-semibold">Select Date</p>

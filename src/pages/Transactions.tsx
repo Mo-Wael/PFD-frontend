@@ -9,6 +9,7 @@ import { formatDate } from '../utils/Data';
 import EditTransactionModel from '../components/UI/EditTransactionModel';
 import DeleteTransactionModel from '../components/UI/DeleteTransactionModel';
 import AddTransactionModel from '../components/UI/AddTransactionModel';
+import { exportTransactionsCSV } from '../components/UI/ExportAsCSV';
 
 const Transactions = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -125,6 +126,15 @@ const Transactions = () => {
           <option value="income">Income</option>
           <option value="expense">Expense</option>
         </select>
+        
+        {/* Exporting dropdown button */}
+        <button
+          onClick={() => exportTransactionsCSV(transactions)}
+          className="flex items-center cursor-pointer gap-2 p-2.5 border border-gray-300 rounded-xl hover:bg-gray-200/20"
+        >
+          Export as CSV
+        </button>
+        
         {/* Adding new Transaction */}
         <button onClick={() => setModelOpend(true)} className='flex items-center cursor-pointer gap-2 p-2 border border-gray-300 bg-background-main text-white rounded-xl hover:bg-background-main/80'>
           <PlusIcon className="w-5 h-5" /> Add Transaction

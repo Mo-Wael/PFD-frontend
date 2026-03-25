@@ -1,6 +1,6 @@
 import { Save, User } from 'lucide-react'
 import { useCurrentUser, useUpdateUser } from '../hooks/useAuth'
-import { useEffect, useState, type ChangeEvent } from 'react';
+import { useState, type ChangeEvent } from 'react';
 import type { UpdatedUserData } from '../types/Auth';
 import DeleteUserModal from '../components/UI/DeleteUserModal';
 
@@ -10,22 +10,11 @@ const Settings = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const updateUser = useUpdateUser();
   const [updatedUser, setUpdatedUser] = useState<UpdatedUserData>({
-    fullName: "",
-    phoneNumber: "",
-    address: "",
-    profileImage: null,
+    fullName: currentUser?.fullName ?? "",
+    phoneNumber: currentUser?.phoneNumber ?? "",
+    address: currentUser?.address ?? "",
+    profileImage: currentUser?.profileImage ?? null,
   });
-
-  useEffect(() => {
-    if (currentUser) {
-      setUpdatedUser({
-        fullName: currentUser.fullName ?? "",
-        phoneNumber: currentUser.phoneNumber ?? "",
-        address: currentUser.address ?? "",
-        profileImage: currentUser.profileImage ?? null,
-      });
-    }
-  }, [currentUser]);
 
   const handleUpdateUser = (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,7 +60,11 @@ const Settings = () => {
             )}
           </div>
           <div className="flex flex-col gap-2 text-center sm:text-left">
+
+            {/* full name */}
             <p className="text-lg font-semibold text-gray-800">{user?.fullName}</p>
+
+            {/* email */}
             <p className="text-sm text-gray-600">{user?.email}</p>
             <label className="mt-2 text-sm text-blue-600 hover:text-blue-800 font-medium transition-colors cursor-pointer">
               Change Profile Picture
@@ -90,8 +83,8 @@ const Settings = () => {
               type="text"
               id="fullname"
               placeholder="Enter your full name"
-              // defaultValue={user?.fullName}
-              value={updatedUser.fullName}
+              defaultValue={user?.fullName}
+              // value={updatedUser.fullName}
               onChange={(e) => setUpdatedUser({ ...updatedUser, fullName: e.target.value })}
               className="px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:black/30 focus:border-transparent transition-all"
             />
@@ -105,8 +98,8 @@ const Settings = () => {
               type="tel"
               id="phone"
               placeholder="Enter your phone number in format: +20123456789"
-              // defaultValue={user?.phoneNumber}
-              value={updatedUser.phoneNumber}
+              defaultValue={user?.phoneNumber}
+              // value={updatedUser?.phoneNumber}
               onChange={(e) => setUpdatedUser({ ...updatedUser, phoneNumber: e.target.value })}
               className="px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:black/30 focus:border-transparent transition-all"
             />
@@ -120,8 +113,8 @@ const Settings = () => {
               type="text"
               id="address"
               placeholder="Enter your address"
-              // defaultValue={user?.address}
-              value={updatedUser.address}
+              value={user?.address}
+              // value={updatedUser.address}
               onChange={(e) => setUpdatedUser({ ...updatedUser, address: e.target.value })}
               className="px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:black/30 focus:border-transparent transition-all"
             />
